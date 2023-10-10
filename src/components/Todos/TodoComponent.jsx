@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./TodoComponent.css";
+import { getTodosAPI } from "../../api/todos";
 
 const TodoComponent = () => {
+  useEffect(() => {
+    fetchGetTodos();
+  }, []);
+
+  const fetchGetTodos = async () => {
+    const res = getTodosAPI();
+    console.log("res", res);
+  };
+
   return (
     <main id="todolist">
       <h1>
