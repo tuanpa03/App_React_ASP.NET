@@ -1,15 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { deleteTodo, getTodosAPI } from "../../api/todos";
 import "./TodoComponent.css";
-import { getTodosAPI } from "../../api/todos";
 
 const TodoComponent = () => {
+  const [todos, setTodos] = useState([]);
+
   useEffect(() => {
     fetchGetTodos();
   }, []);
 
   const fetchGetTodos = async () => {
-    const res = getTodosAPI();
-    console.log("res", res);
+    setTodos(await getTodosAPI());
+  };
+
+  const delTodo = async (id) => {
+    if (window.confirm("Bạn có muốn xóa không?")) {
+      await deleteTodo(id);
+      window.location.reload(); //reload lai
+    }
   };
 
   return (
@@ -23,28 +31,27 @@ const TodoComponent = () => {
         <input type="text" name="id" id="name" />
         <button type="button">Thêm mới công việc</button>
       </form>
-      <li className="done">
-        <span className="label">123</span>
-        <div className="actions">
-          <button className="btn-picto" type="button">
-            <i className="fas fa-edit" />
-          </button>
-          <button className="btn-picto" type="button" aria-label="Delete" title="Delete">
-            <i className="fas fa-trash" />
-          </button>
-        </div>
-      </li>
-      <li>
-        <span className="label">123</span>
-        <div className="actions">
-          <button className="btn-picto" type="button">
-            <i className="fas fa-user-edit" />
-          </button>
-          <button className="btn-picto" type="button" aria-label="Delete" title="Delete">
-            <i className="fas fa-trash" />
-          </button>
-        </div>
-      </li>
+      {todos.map((item) => {
+        return (
+          <li key={item.id} className={item.isComplete ? "done" : ""}>
+            <span className="label">{item.name}</span>
+            <div className="actions">
+              <button className="btn-picto" type="button">
+                <i className="fas fa-edit" />
+              </button>
+              <button
+                className="btn-picto"
+                type="button"
+                aria-label="Delete"
+                title="Delete"
+                onClick={() => delTodo(item.id)}
+              >
+                <i className="fas fa-trash" />
+              </button>
+            </div>
+          </li>
+        );
+      })}
       <p>Danh sách nhiệm vụ trống.</p>
     </main>
   );
