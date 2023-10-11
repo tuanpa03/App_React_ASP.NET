@@ -12,3 +12,7 @@ export const getTodosAPI = () => {
 export const deleteTodo = (id) => {
   return axiosClient.delete(`${END_POINT.TODOS}/${id}`);
 };
+
+export const addTodoAPI = (todo) => {
+  return axiosClient.post(`${END_POINT.TODOS}`, todo);
+};
